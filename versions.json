@@ -7,10 +7,12 @@
     "variants": [
       "buster/cli",
       "buster/apache",
+      "buster/apache-fpm",
       "buster/fpm",
       "buster/zts",
       "stretch/cli",
       "stretch/apache",
+      "stretch/apache-fpm",
       "stretch/fpm",
       "stretch/zts",
       "alpine3.12/cli",
@@ -30,10 +32,12 @@
     "variants": [
       "buster/cli",
       "buster/apache",
+      "buster/apache-fpm",
       "buster/fpm",
       "buster/zts",
       "stretch/cli",
       "stretch/apache",
+      "stretch/apache-fpm",
       "stretch/fpm",
       "stretch/zts",
       "alpine3.12/cli",
@@ -53,6 +57,7 @@
     "variants": [
       "buster/cli",
       "buster/apache",
+      "buster/apache-fpm",
       "buster/fpm",
       "buster/zts",
       "alpine3.12/cli",
@@ -72,6 +77,7 @@
     "variants": [
       "buster/cli",
       "buster/apache",
+      "buster/apache-fpm",
       "buster/fpm",
       "buster/zts",
       "alpine3.12/cli",
