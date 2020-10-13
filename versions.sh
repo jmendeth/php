@@ -120,7 +120,7 @@ for version in "${versions[@]}"; do
 		alpine3.12 \
 		alpine3.11 \
 	; do
-		for variant in cli apache fpm zts; do
+		for variant in cli apache apache-fpm fpm zts; do
 			[ -d "$version/$suite/$variant" ] || continue
 			export suite variant
 			variants="$(jq <<<"$variants" -c '. + [ env.suite + "/" + env.variant ]')"

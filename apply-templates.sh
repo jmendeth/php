@@ -48,6 +48,7 @@ for version; do
 		export from
 
 		case "$variant" in
+			apache-fpm) cmd='["start-runsvdir"]' ;;
 			apache) cmd='["apache2-foreground"]' ;;
 			fpm) cmd='["php-fpm"]' ;;
 			*) cmd='["php", "-a"]' ;;
@@ -70,10 +71,10 @@ for version; do
 			docker-php-ext-* \
 			docker-php-source \
 			"$version/$dir/"
-		if [ "$variant" = 'apache' ]; then
+		if [ "$variant" = 'apache' -o "$variant" = 'apache-fpm' ]; then
 			cp -a docker-php-setup-apache apache2-foreground "$version/$dir/"
 		fi
-		if [ "$variant" = 'fpm' ]; then
+		if [ "$variant" = 'fpm' -o "$variant" = 'apache-fpm' ]; then
 			cp -a docker-php-setup-fpm "$version/$dir/"
 		fi
 

@@ -1,0 +1,25 @@
+{{ include "version-id" -}}
+WORKDIR /var/www/html
+
+COPY docker-php-setup-fpm /usr/local/bin/
+RUN env \
+	{{ if (.version | version_id) >= ("7.3" | version_id) then "REMOVE_LOG_DECORATION=1" else "" end }} \
+	APACHE_FPM=1 docker-php-setup-fpm
+
+# Tell runit to launch Apache and PHP-FPM
+ENV FPM_OPTIONS="" APACHE_OPTIONS=""
+RUN mkdir /etc/service/fpm /etc/service/apache \
+        && { echo '#!/bin/sh'; echo 'exec php-fpm $FPM_OPTIONS'; } > /etc/service/fpm/run \
+        && { echo '#!/bin/sh'; echo 'exec apache2-foreground $APACHE_OPTIONS'; } > /etc/service/apache/run \
+        && chmod +x /etc/service/fpm/run /etc/service/apache/run
+
+# Small init-script to launch runit and handle stops gracefully
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'trap "sv stop /etc/service/* >/dev/null && exit" TERM INT'; \
+		echo 'runsvdir -P /etc/service &'; \
+		echo 'while jobs %% >/dev/null 2>&1; do wait; done'; \
+	} | tee /usr/local/bin/start-runsvdir \
+	&& chmod +x /usr/local/bin/start-runsvdir
+
+EXPOSE 80

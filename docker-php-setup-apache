@@ -37,12 +37,20 @@ ln -sfT /dev/stdout "$APACHE_LOG_DIR/other_vhosts_access.log"
 chown -R --no-dereference "$APACHE_RUN_USER:$APACHE_RUN_GROUP" "$APACHE_LOG_DIR"
 
 # Apache + PHP requires preforking Apache for best results
-a2dismod mpm_event && a2enmod mpm_prefork
+if [ ! -z ${APACHE_FPM+x} ]; then
+	a2enmod mpm_event proxy_fcgi
+else
+	a2dismod mpm_event && a2enmod mpm_prefork
+fi
 
 # PHP files should be handled by PHP, and should be preferred over any other file type
 {
 		echo '<FilesMatch \.php$>'
+if [ ! -z ${APACHE_FPM+x} ]; then
+		echo '\tSetHandler proxy:unix:/var/run/php-fpm/fpm.sock|fcgi://localhost/'
+else
 		echo '\tSetHandler application/x-httpd-php'
+fi
 		echo '</FilesMatch>'
 		echo
 		echo 'DirectoryIndex disabled'
